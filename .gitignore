@@ -167,4 +167,4 @@ logs/
 trash
 
 # vscode
-vscode
+.vscode
