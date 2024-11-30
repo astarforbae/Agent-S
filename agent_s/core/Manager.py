@@ -90,15 +90,15 @@ class Manager(BaseModule):
 
         self.active_apps = agent.get_active_apps(observation)
 
-        tree_input = agent.linearize_and_annotate_tree(
-            observation
-        )
+        tree_input = agent.linearize_and_annotate_tree(observation)
         observation["linearized_accessibility_tree"] = tree_input
 
         # Perform Retrieval only at the first planning step
         if self.turn_count == 0:
-            
-            self.search_query = self.knowldge_base.formulate_query(instruction, observation)
+
+            self.search_query = self.knowldge_base.formulate_query(
+                instruction, observation
+            )
 
             retrieved_experience = ""
             integrated_knowledge = ""
@@ -110,8 +110,7 @@ class Manager(BaseModule):
                 "SIMILAR TASK EXPERIENCE: %s",
                 most_similar_task + "\n" + retrieved_experience.strip(),
             )
-            
-            
+
             # Retrieve knowledge from the web if search_engine is provided
             if self.search_engine is not None:
                 retrieved_knowledge = self.knowldge_base.retrieve_knowledge(
@@ -131,13 +130,13 @@ class Manager(BaseModule):
                         experience=retrieved_experience,
                     )
                     logger.info("INTEGRATED KNOWLEDGE: %s", integrated_knowledge)
-            
+
             integrated_knowledge = integrated_knowledge or retrieved_experience
-            
-            # Add the integrated knowledge to the task instruction in the system prompt 
+
+            # Add the integrated knowledge to the task instruction in the system prompt
             if integrated_knowledge:
                 instruction += f"\nYou may refer to some retrieved knowledge if you think they are useful.{integrated_knowledge}"
-                
+
             self.generator_agent.add_system_prompt(
                 self.generator_agent.system_prompt.replace(
                     "TASK_DESCRIPTION", instruction

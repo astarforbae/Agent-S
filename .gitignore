@@ -162,3 +162,9 @@ cython_debug/
 #.idea/
 logs/
 .DS_Store
+
+# trash
+trash
+
+# vscode
+vscode
